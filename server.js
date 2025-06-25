@@ -1,14 +1,17 @@
 const express = require('express');
 const path = require('path');
+const dotenv = require('dotenv');
+
+// Завантажити змінні середовища
+dotenv.config();
+
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.static(__dirname));
+// Статичні файли з кореневої папки
+app.use(express.static(path.join(__dirname)));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+// Запуск сервера
+app.listen(PORT, () => {
+  console.log(`Сервер запущено на порті ${PORT}`);
 });
