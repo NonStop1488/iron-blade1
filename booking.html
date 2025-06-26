@@ -106,90 +106,87 @@
           type="text"
           class="form-control"
           id="fullName"
-          name="full_name"
           placeholder="Іван Іваненко"
           required
           minlength="3"
         />
         <div class="invalid-feedback">Будь ласка, введіть ваше ім’я (мінімум 3 символи).</div>
       </div>
-    
+
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input
           type="email"
           class="form-control"
           id="email"
-          name="email"
           placeholder="ivan@example.com"
           required
         />
         <div class="invalid-feedback">Будь ласка, введіть коректну email адресу.</div>
       </div>
-    
+
       <div class="mb-3">
         <label for="phone" class="form-label">Телефон</label>
         <input
           type="tel"
           class="form-control"
           id="phone"
-          name="phone_number"
           placeholder="+380XXXXXXXXX"
           pattern="^\+380\d{9}$"
           required
         />
         <div class="invalid-feedback">Введіть номер телефону у форматі +380XXXXXXXXX.</div>
       </div>
-    
+
       <div class="mb-3">
         <label for="service" class="form-label">Послуга</label>
-        <select class="form-select" id="service" name="service_id" required>
+        <select class="form-select" id="service" required>
           <option value="" selected disabled>Оберіть послугу</option>
-          <option value="1">Чоловіча стрижка</option>
-          <option value="2">Класичне гоління</option>
-          <option value="3">Догляд за бородою</option>
+          <option value="haircut">Чоловіча стрижка</option>
+          <option value="shave">Класичне гоління</option>
+          <option value="beard">Догляд за бородою</option>
         </select>
         <div class="invalid-feedback">Будь ласка, оберіть послугу.</div>
       </div>
-    
+
       <div class="mb-3">
         <label for="barber" class="form-label">Барбер</label>
-        <select class="form-select" id="barber" name="barber_id" required>
+        <select class="form-select" id="barber" required>
           <option value="" selected disabled>Оберіть барбера</option>
-          <option value="1">Олег Іванов</option>
-          <option value="2">Дмитро Коваленко</option>
-          <option value="3">Сергій Бондар</option>
+          <option value="oleg">Олег Іванов</option>
+          <option value="dmytro">Дмитро Коваленко</option>
+          <option value="serhii">Сергій Бондар</option>
         </select>
         <div class="invalid-feedback">Будь ласка, оберіть барбера.</div>
       </div>
-    
+
+      <!-- Блок з інформацією про доступність -->
       <div class="mb-3" id="availabilityInfo" style="display:none;">
         <h5>Доступні дати та час для обраної послуги і барбера:</h5>
         <p id="availableDates"></p>
         <p id="availableTimes"></p>
       </div>
-    
+
       <div class="mb-3">
         <label for="date" class="form-label">Дата</label>
         <input
           type="date"
           class="form-control"
           id="date"
-          name="date"
           required
           disabled
         />
         <div class="invalid-feedback">Будь ласка, оберіть дату.</div>
       </div>
-    
+
       <div class="mb-3">
         <label for="time" class="form-label">Час</label>
-        <select class="form-select" id="time" name="time" required disabled>
+        <select class="form-select" id="time" required disabled>
           <option value="" selected disabled>Оберіть час</option>
         </select>
         <div class="invalid-feedback">Будь ласка, оберіть час.</div>
       </div>
-    
+
       <button type="submit" class="btn btn-primary w-100">Записатися</button>
     </form>
   </section>
