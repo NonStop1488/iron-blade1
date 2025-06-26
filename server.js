@@ -11,23 +11,30 @@ app.use(express.static(path.join(__dirname)));
 
 const PORT = process.env.PORT || 3000;
 
-// 🔧 Створюємо загальне з'єднання
+// 1. Створити одне підключення до БД (глобально)
 let db;
-async function connectDB() {
-  db = await mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  });
-}
-connectDB(); // запуск підключення
 
-// 🔹 Запис на стрижку
+async function connectDB() {
+  try {
+    db = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+    });
+    console.log('✅ Підключення до бази даних успішне');
+  } catch (err) {
+    console.error('❌ Помилка підключення до бази даних:', err);
+  }
+}
+connectDB();
+
+// 2. Обробка запису через форму
 app.post('/book', async (req, res) => {
   const { full_name, phone_number, email, service_id, barber_id, date, time } = req.body;
 
   try {
+    // Додати клієнта
     const [clientResult] = await db.execute(
       'INSERT INTO clients (full_name, phone_number, email) VALUES (?, ?, ?)',
       [full_name, phone_number, email]
@@ -35,6 +42,7 @@ app.post('/book', async (req, res) => {
 
     const client_id = clientResult.insertId;
 
+    // Додати запис
     await db.execute(
       'INSERT INTO bookings (client_id, service_id, barber_id, date, time) VALUES (?, ?, ?, ?, ?)',
       [client_id, service_id, barber_id, date, time]
@@ -47,7 +55,7 @@ app.post('/book', async (req, res) => {
   }
 });
 
-// 🔹 Перегляд записів
+// 3. Віддати список записів як JSON
 app.get('/api/bookings', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -65,6 +73,7 @@ app.get('/api/bookings', async (req, res) => {
   }
 });
 
+// 4. Запуск сервера
 app.listen(PORT, () => {
   console.log(`🚀 Сервер працює на порту ${PORT}`);
 });
