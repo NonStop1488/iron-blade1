@@ -2,22 +2,39 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Записи клієнтів</title>
+  <title>Список записів</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
-    h1 { color: #333; }
-    table { border-collapse: collapse; width: 100%; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-    th { background-color: #eee; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #f2f2f2;
+    }
   </style>
 </head>
 <body>
-  <h1>Список записів клієнтів</h1>
-  <table id="bookingsTable">
+  <h1>📋 Список записів</h1>
+  <table id="bookings-table">
     <thead>
       <tr>
-        <th>Ім'я клієнта</th>
+        <th>Ім’я клієнта</th>
         <th>Послуга</th>
         <th>Барбер</th>
         <th>Дата</th>
@@ -28,25 +45,33 @@
   </table>
 
   <script>
-    fetch('/api/bookings')
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.querySelector('tbody');
-        data.forEach(row => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${row.full_name}</td>
-            <td>${row.service}</td>
-            <td>${row.barber}</td>
-            <td>${row.date}</td>
-            <td>${row.time}</td>
+    async function loadBookings() {
+      try {
+        const res = await fetch('/api/bookings');
+        if (!res.ok) throw new Error('Сервер повернув помилку');
+        const data = await res.json();
+
+        const tbody = document.querySelector('#bookings-table tbody');
+        tbody.innerHTML = '';
+
+        data.forEach(booking => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${booking.full_name}</td>
+            <td>${booking.service}</td>
+            <td>${booking.barber}</td>
+            <td>${booking.date}</td>
+            <td>${booking.time}</td>
           `;
-          tbody.appendChild(tr);
+          tbody.appendChild(row);
         });
-      })
-      .catch(error => {
-        console.error('Помилка при завантаженні записів:', error);
-      });
+      } catch (err) {
+        console.error('Помилка при завантаженні записів:', err);
+        alert('Не вдалося завантажити записи.');
+      }
+    }
+
+    loadBookings();
   </script>
 </body>
 </html>
