@@ -1,39 +1,34 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <title>Список записів</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Перегляд записів</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      background: #f9f9f9;
-    }
-    h1 {
-      color: #333;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
     }
     th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
+      padding: 10px;
+      border: 1px solid #ccc;
       text-align: left;
     }
     th {
-      background: #f2f2f2;
+      background-color: #eee;
     }
   </style>
 </head>
 <body>
-  <h1>📋 Список записів</h1>
-  <table id="bookings-table">
+  <h1>Записи клієнтів</h1>
+  <table>
     <thead>
       <tr>
+        <th>#</th>
         <th>Ім’я клієнта</th>
         <th>Послуга</th>
         <th>Барбер</th>
@@ -41,22 +36,25 @@
         <th>Час</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="booking-list">
+      <!-- Дані завантажуються тут -->
+    </tbody>
   </table>
 
   <script>
     async function loadBookings() {
       try {
-        const res = await fetch('/api/bookings');
-        if (!res.ok) throw new Error('Сервер повернув помилку');
-        const data = await res.json();
+        const response = await fetch('/api/bookings');
+        if (!response.ok) throw new Error('Сервер повернув помилку');
+        const data = await response.json();
 
-        const tbody = document.querySelector('#bookings-table tbody');
+        const tbody = document.getElementById('booking-list');
         tbody.innerHTML = '';
 
-        data.forEach(booking => {
+        data.forEach((booking, index) => {
           const row = document.createElement('tr');
           row.innerHTML = `
+            <td>${index + 1}</td>
             <td>${booking.full_name}</td>
             <td>${booking.service}</td>
             <td>${booking.barber}</td>
@@ -65,9 +63,8 @@
           `;
           tbody.appendChild(row);
         });
-      } catch (err) {
-        console.error('Помилка при завантаженні записів:', err);
-        alert('Не вдалося завантажити записи.');
+      } catch (error) {
+        console.error('Помилка при завантаженні записів:', error);
       }
     }
 
