@@ -49,37 +49,27 @@ app.post("/book", async (req, res) => {
 });
 
 
-// ✅ Вивід усіх записів
-app.get("/bookings", async (req, res) => {
+app.get('/api/bookings', async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-
-    const [rows] = await connection.execute(`
+    const [rows] = await db.execute(`
       SELECT bookings.id, clients.full_name, services.name AS service, barbers.name AS barber, date, time
       FROM bookings
       JOIN clients ON bookings.client_id = clients.id
       JOIN services ON bookings.service_id = services.id
       JOIN barbers ON bookings.barber_id = barbers.id
-      ORDER BY date, time
+      ORDER BY date, time;
     `);
-
-    await connection.end();
-
-    let html = "<h1>Записи</h1><ul>";
-    for (const row of rows) {
-      html += `<li><strong>${row.full_name}</strong> — ${row.service} у <em>${row.barber}</em> на ${row.date} о ${row.time}</li>`;
-    }
-    html += "</ul><a href='/'>← На головну</a>";
-
-    res.send(html);
+    res.json(rows);
   } catch (err) {
-    console.error("❌ Помилка при завантаженні записів:", err);
-    res.status(500).send("Помилка при завантаженні записів.");
+    console.error('Помилка при отриманні записів:', err);
+    res.status(500).json({ error: 'Помилка сервера' });
   }
 });
+
 
 
 // ✅ Запуск сервера
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущено на порту ${PORT}`);
 });
+
