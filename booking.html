@@ -4,15 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Записатися — Iron Blade Barbershop</title>
-  
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto:wght@400;500&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
   <style>
     body {
       font-family: "Roboto", sans-serif;
@@ -60,25 +55,13 @@
     .btn-primary:hover {
       background-color: #e64a19;
     }
-    #availabilityInfo {
-      margin-top: 30px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 15px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
   </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg">
     <div class="container">
       <a class="navbar-brand" href="index.html">Iron Blade</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -94,97 +77,69 @@
   </nav>
 
   <header class="page-header">
-    <h1>Записатися на послугу</h1>
-    <p>Обери зручний для тебе час та барбера</p>
+    <h1>Запис на послугу</h1>
+    <p>Оберіть зручний для вас час та майстра</p>
   </header>
 
   <section class="booking-form">
-    <form id="bookingForm" novalidate>
+    <form id="bookingForm" action="/book" method="POST" novalidate>
       <div class="mb-3">
         <label for="fullName" class="form-label">Повне ім’я</label>
-        <input
-          type="text"
-          class="form-control"
-          id="fullName"
-          placeholder="Іван Іваненко"
-          required
-          minlength="3"
-        />
-        <div class="invalid-feedback">Будь ласка, введіть ваше ім’я (мінімум 3 символи).</div>
+        <input type="text" class="form-control" id="fullName" name="full_name" required minlength="3" />
+        <div class="invalid-feedback">Введіть ваше ім’я (мін. 3 символи).</div>
       </div>
 
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          placeholder="ivan@example.com"
-          required
-        />
-        <div class="invalid-feedback">Будь ласка, введіть коректну email адресу.</div>
+        <input type="email" class="form-control" id="email" name="email" required />
+        <div class="invalid-feedback">Введіть коректну email адресу.</div>
       </div>
 
       <div class="mb-3">
         <label for="phone" class="form-label">Телефон</label>
-        <input
-          type="tel"
-          class="form-control"
-          id="phone"
-          placeholder="+380XXXXXXXXX"
-          pattern="^\+380\d{9}$"
-          required
-        />
-        <div class="invalid-feedback">Введіть номер телефону у форматі +380XXXXXXXXX.</div>
+        <input type="tel" class="form-control" id="phone" name="phone_number" required pattern="^\+380\d{9}$" />
+        <div class="invalid-feedback">Формат: +380XXXXXXXXX.</div>
       </div>
 
       <div class="mb-3">
         <label for="service" class="form-label">Послуга</label>
-        <select class="form-select" id="service" required>
-          <option value="" selected disabled>Оберіть послугу</option>
-          <option value="haircut">Чоловіча стрижка</option>
-          <option value="shave">Класичне гоління</option>
-          <option value="beard">Догляд за бородою</option>
+        <select class="form-select" id="service" name="service_id" required>
+          <option value="" disabled selected>Оберіть послугу</option>
+          <option value="1">Чоловіча стрижка</option>
+          <option value="2">Класичне гоління</option>
+          <option value="3">Догляд за бородою</option>
         </select>
-        <div class="invalid-feedback">Будь ласка, оберіть послугу.</div>
+        <div class="invalid-feedback">Оберіть послугу.</div>
       </div>
 
       <div class="mb-3">
         <label for="barber" class="form-label">Барбер</label>
-        <select class="form-select" id="barber" required>
-          <option value="" selected disabled>Оберіть барбера</option>
-          <option value="oleg">Олег Іванов</option>
-          <option value="dmytro">Дмитро Коваленко</option>
-          <option value="serhii">Сергій Бондар</option>
+        <select class="form-select" id="barber" name="barber_id" required>
+          <option value="" disabled selected>Оберіть барбера</option>
+          <option value="1">Олег Іванов</option>
+          <option value="2">Дмитро Коваленко</option>
+          <option value="3">Сергій Бондар</option>
         </select>
-        <div class="invalid-feedback">Будь ласка, оберіть барбера.</div>
-      </div>
-
-      <!-- Блок з інформацією про доступність -->
-      <div class="mb-3" id="availabilityInfo" style="display:none;">
-        <h5>Доступні дати та час для обраної послуги і барбера:</h5>
-        <p id="availableDates"></p>
-        <p id="availableTimes"></p>
+        <div class="invalid-feedback">Оберіть барбера.</div>
       </div>
 
       <div class="mb-3">
         <label for="date" class="form-label">Дата</label>
-        <input
-          type="date"
-          class="form-control"
-          id="date"
-          required
-          disabled
-        />
-        <div class="invalid-feedback">Будь ласка, оберіть дату.</div>
+        <input type="date" class="form-control" id="date" name="date" required />
+        <div class="invalid-feedback">Оберіть дату.</div>
       </div>
 
       <div class="mb-3">
         <label for="time" class="form-label">Час</label>
-        <select class="form-select" id="time" required disabled>
-          <option value="" selected disabled>Оберіть час</option>
+        <select class="form-select" id="time" name="time" required>
+          <option value="" disabled selected>Оберіть час</option>
+          <option value="09:00">09:00</option>
+          <option value="11:00">11:00</option>
+          <option value="13:00">13:00</option>
+          <option value="15:00">15:00</option>
+          <option value="17:00">17:00</option>
         </select>
-        <div class="invalid-feedback">Будь ласка, оберіть час.</div>
+        <div class="invalid-feedback">Оберіть час.</div>
       </div>
 
       <button type="submit" class="btn btn-primary w-100">Записатися</button>
@@ -197,160 +152,23 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Встановлення мінімальної дати на сьогодні
     const dateInput = document.getElementById("date");
     const today = new Date().toISOString().split("T")[0];
     dateInput.min = today;
 
-    const serviceSelect = document.getElementById("service");
-    const barberSelect = document.getElementById("barber");
-    const availabilityInfo = document.getElementById("availabilityInfo");
-    const availableDatesElem = document.getElementById("availableDates");
-    const availableTimesElem = document.getElementById("availableTimes");
-    const timeSelect = document.getElementById("time");
-
-    // Дані доступності (приклад)
-    const availability = {
-      oleg: {
-        haircut: {
-          dates: ["2025-06-26", "2025-06-27", "2025-06-29"],
-          times: ["09:00", "10:00", "14:00", "16:00"]
-        },
-        shave: {
-          dates: ["2025-06-26", "2025-06-28"],
-          times: ["11:00", "13:00", "15:00"]
-        },
-        beard: {
-          dates: ["2025-06-27", "2025-06-29"],
-          times: ["10:00", "12:00", "18:00"]
-        }
-      },
-      dmytro: {
-        haircut: {
-          dates: ["2025-06-26", "2025-06-30"],
-          times: ["09:00", "13:00", "15:00", "17:00"]
-        },
-        shave: {
-          dates: ["2025-06-27", "2025-06-28"],
-          times: ["09:00", "11:00", "14:00"]
-        },
-        beard: {
-          dates: ["2025-06-29", "2025-06-30"],
-          times: ["12:00", "16:00", "20:00"]
-        }
-      },
-      serhii: {
-        haircut: {
-          dates: ["2025-06-26", "2025-06-27", "2025-06-28"],
-          times: ["10:00", "12:00", "14:00"]
-        },
-        shave: {
-          dates: ["2025-06-28", "2025-06-29"],
-          times: ["09:00", "11:00", "13:00"]
-        },
-        beard: {
-          dates: ["2025-06-26", "2025-06-30"],
-          times: ["15:00", "17:00", "19:00"]
-        }
-      }
-    };
-
-    function updateAvailability() {
-      const service = serviceSelect.value;
-      const barber = barberSelect.value;
-
-      if (service && barber && availability[barber] && availability[barber][service]) {
-        availabilityInfo.style.display = "block";
-
-        // Форматування дат для відображення
-        const dates = availability[barber][service].dates;
-        const formattedDates = dates
-          .map(d => {
-            const date = new Date(d);
-            return date.toLocaleDateString("uk-UA", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric"
-            });
-          })
-          .join(", ");
-
-        availableDatesElem.textContent = `Дати: ${formattedDates}`;
-
-        // Вмикаємо вибір дати і скидаємо попередній вибір
-        dateInput.disabled = false;
-        dateInput.value = "";
-        availableTimesElem.textContent = "Оберіть дату, щоб побачити доступний час";
-        timeSelect.innerHTML = `<option value="" selected disabled>Оберіть час</option>`;
-        timeSelect.disabled = true;
-      } else {
-        availabilityInfo.style.display = "none";
-        dateInput.value = "";
-        dateInput.disabled = true;
-        availableDatesElem.textContent = "";
-        availableTimesElem.textContent = "";
-        timeSelect.innerHTML = `<option value="" selected disabled>Оберіть час</option>`;
-        timeSelect.disabled = true;
-      }
-    }
-
-    function updateTimes() {
-      const service = serviceSelect.value;
-      const barber = barberSelect.value;
-      const chosenDate = dateInput.value;
-
-      if (service && barber && chosenDate && availability[barber] && availability[barber][service]) {
-        const availableDates = availability[barber][service].dates;
-        if (availableDates.includes(chosenDate)) {
-          const times = availability[barber][service].times;
-          availableTimesElem.textContent = `Доступний час: ${times.join(", ")}`;
-
-          // Оновлюємо select часу
-          timeSelect.innerHTML = `<option value="" selected disabled>Оберіть час</option>`;
-          times.forEach(t => {
-            const option = document.createElement("option");
-            option.value = t;
-            option.textContent = t;
-            timeSelect.appendChild(option);
-          });
-          timeSelect.disabled = false;
-        } else {
-          availableTimesElem.textContent = "Обрана дата недоступна.";
-          timeSelect.innerHTML = `<option value="" selected disabled>Оберіть час</option>`;
-          timeSelect.disabled = true;
-        }
-      }
-    }
-
-    serviceSelect.addEventListener("change", updateAvailability);
-    barberSelect.addEventListener("change", updateAvailability);
-    dateInput.addEventListener("change", updateTimes);
-
-    // Валідація форми Bootstrap 5
     (() => {
       "use strict";
       const form = document.getElementById("bookingForm");
 
-      form.addEventListener(
-        "submit",
-        (event) => {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          } else {
-            event.preventDefault();
-            alert("Дякуємо за запис! Ми зв’яжемося з вами найближчим часом.");
-            form.reset();
-            availabilityInfo.style.display = "none";
-            dateInput.disabled = true;
-            timeSelect.disabled = true;
-          }
-          form.classList.add("was-validated");
-        },
-        false
-      );
+      form.addEventListener("submit", (event) => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add("was-validated");
+      }, false);
     })();
   </script>
 </body>
