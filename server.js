@@ -38,11 +38,10 @@ app.post('/book', async (req, res) => {
     );
 
     await connection.end();
-
-    res.send('<h2>✅ Ви успішно записались!</h2><a href="/">Повернутись на головну</a>');
+    res.redirect('/booking-success.html');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('❌ Помилка при записі.');
+    console.error('❌ Помилка при записі в БД:', err);
+    res.status(500).send('Помилка при записі в базу даних.');
   }
 });
 
