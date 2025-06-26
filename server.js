@@ -23,7 +23,7 @@ async function getConnection() {
 }
 
 // 📥 Запис клієнта
-app.post('/booking', async (req, res) => {
+app.post('/bookings', async (req, res) => {
   const { full_name, phone_number, email, service_id, barber_id, date, time } = req.body;
 
   try {
@@ -53,7 +53,7 @@ app.post('/booking', async (req, res) => {
 });
 
 // 📤 Отримати всі записи
-app.get('/api/booking', async (req, res) => {
+app.get('/api/bookings', async (req, res) => {
   try {
     const connection = await getConnection();
 
