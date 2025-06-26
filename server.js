@@ -53,7 +53,7 @@ app.post('/booking', async (req, res) => {
 });
 
 // 📤 Отримати всі записи
-app.get('/api/bookings', async (req, res) => {
+app.get('/api/booking', async (req, res) => {
   try {
     const connection = await getConnection();
 
