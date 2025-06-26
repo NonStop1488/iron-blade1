@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Перегляд записів</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Записи клієнтів</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Ім’я клієнта</th>
+        <th>Послуга</th>
+        <th>Барбер</th>
+        <th>Дата</th>
+        <th>Час</th>
+      </tr>
+    </thead>
+    <tbody id="booking-list">
+      <!-- Дані завантажуються тут -->
+    </tbody>
+  </table>
+
+  <script>
+    async function loadBookings() {
+      try {
+        const response = await fetch('/api/bookings');
+        if (!response.ok) throw new Error('Сервер повернув помилку');
+        const data = await response.json();
+
+        const tbody = document.getElementById('booking-list');
+        tbody.innerHTML = '';
+
+        data.forEach((booking, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${booking.full_name}</td>
+            <td>${booking.service}</td>
+            <td>${booking.barber}</td>
+            <td>${booking.date}</td>
+            <td>${booking.time}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Помилка при завантаженні записів:', error);
+      }
+    }
+
+    loadBookings();
+  </script>
+</body>
+</html>
