@@ -72,6 +72,7 @@ app.get('/api/bookings', async (req, res) => {
   }
 });
 
+
 app.listen(PORT, () => {
   console.log(`Сервер запущено на порту ${PORT}`);
 });

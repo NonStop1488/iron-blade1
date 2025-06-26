@@ -46,29 +46,31 @@
       try {
         const response = await fetch('/api/bookings');
         if (!response.ok) throw new Error('Сервер повернув помилку');
-        const data = await response.json();
-
-        const tbody = document.getElementById('booking-list');
-        tbody.innerHTML = '';
-
-        data.forEach((booking, index) => {
+  
+        const bookings = await response.json();
+  
+        const tableBody = document.querySelector('#bookings-table tbody');
+        tableBody.innerHTML = '';
+  
+        bookings.forEach(b => {
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${booking.full_name}</td>
-            <td>${booking.service}</td>
-            <td>${booking.barber}</td>
-            <td>${booking.date}</td>
-            <td>${booking.time}</td>
+            <td>${b.id}</td>
+            <td>${b.full_name}</td>
+            <td>${b.service}</td>
+            <td>${b.barber}</td>
+            <td>${b.date}</td>
+            <td>${b.time}</td>
           `;
-          tbody.appendChild(row);
+          tableBody.appendChild(row);
         });
-      } catch (error) {
-        console.error('Помилка при завантаженні записів:', error);
+      } catch (err) {
+        console.error('Помилка при завантаженні записів:', err);
       }
     }
-
-    loadBookings();
+  
+    window.onload = loadBookings;
   </script>
+  
 </body>
 </html>
