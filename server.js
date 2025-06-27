@@ -1,50 +1,87 @@
-const express = require('express');
-const mysql = require('mysql2/promise');
-const dotenv = require('dotenv');
-const path = require('path');
-const bodyParser = require('body-parser');
-
-dotenv.config();
+const express = require("express");
+const mysql = require("mysql2");
+const bodyParser = require("body-parser");
 const app = express();
+const port = process.env.PORT || 3000;
+
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(__dirname));
 
-const PORT = process.env.PORT || 3000;
+// Підключення до БД
+const connection = mysql.createConnection({
+  host: "ballast.proxy.rlwy.net",  // 🔁 заміни
+  user: "root",
+  password: "ZYcNwquBRicUSuZDROzlGDPlfoKJfqUD",                     // 🔁 заміни
+  database: "railway",
+  port: 46916                                   // 🔁 заміни
+});
 
-app.post('/book', async (req, res) => {
-  const { full_name, phone_number, email, service_id, barber_id, date, time } = req.body;
-
-  try {
-    const connection = await mysql.createConnection({
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-    });
-
-    // Додати клієнта
-    const [clientResult] = await connection.execute(
-      'INSERT INTO clients (full_name, phone_number, email) VALUES (?, ?, ?)',
-      [full_name, phone_number, email]
-    );
-
-    const client_id = clientResult.insertId;
-
-    // Додати запис
-    await connection.execute(
-      'INSERT INTO bookings (client_id, service_id, barber_id, date, time) VALUES (?, ?, ?, ?, ?)',
-      [client_id, service_id, barber_id, date, time]
-    );
-
-    await connection.end();
-    res.redirect('/booking-success.html');
-  } catch (err) {
-    console.error('❌ Помилка при записі в БД:', err);
-    res.status(500).send('Помилка при записі в базу даних.');
+// 🔄 Старт з'єднання
+connection.connect((err) => {
+  if (err) {
+    console.error("❌ Помилка з'єднання з БД:", err);
+  } else {
+    console.log("✅ Підключено до бази даних");
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Сервер працює на порту ${PORT}`);
+// 📨 Обробка форми
+app.post("/book", (req, res) => {
+  const { fullName, email, phone, service, barber, date, time } = req.body;
+
+  // 1. Додати клієнта
+  const insertCustomer = `INSERT INTO customers (full_name, email, phone_number) VALUES (?, ?, ?)`;
+  connection.query(insertCustomer, [fullName, email, phone], (err, customerResult) => {
+    if (err) {
+      console.error("❌ Помилка при додаванні клієнта:", err);
+      return res.status(500).send("Помилка при записі.");
+    }
+
+    const customerId = customerResult.insertId;
+
+    // 2. Отримати ID послуги (name → id)
+    const getServiceId = `SELECT id FROM services WHERE name = ?`;
+    connection.query(getServiceId, [service], (err, serviceResult) => {
+      if (err || serviceResult.length === 0) {
+        console.error("❌ Помилка при пошуку послуги:", err);
+        return res.status(500).send("Послугу не знайдено.");
+      }
+
+      const serviceId = serviceResult[0].id;
+
+      // 3. Отримати ID барбера (name → id)
+      const getBarberId = `SELECT id FROM barbers WHERE full_name LIKE ?`;
+      connection.query(getBarberId, [`%${barber}%`], (err, barberResult) => {
+        if (err || barberResult.length === 0) {
+          console.error("❌ Помилка при пошуку барбера:", err);
+          return res.status(500).send("Барбера не знайдено.");
+        }
+
+        const barberId = barberResult[0].id;
+
+        // 4. Додати запис
+        const insertAppointment = `
+          INSERT INTO appointments (customer_id, service_id, barber_id, appointment_date, appointment_time)
+          VALUES (?, ?, ?, ?, ?)
+        `;
+        connection.query(
+          insertAppointment,
+          [customerId, serviceId, barberId, date, time],
+          (err) => {
+            if (err) {
+              console.error("❌ Помилка при записі:", err);
+              return res.status(500).send("Не вдалося записати.");
+            }
+
+            res.send("✅ Ви успішно записались!");
+          }
+        );
+      });
+    });
+  });
+});
+
+// 🚀 Запуск сервера
+app.listen(port, () => {
+  console.log(`🟢 Сервер працює на http://localhost:${port}`);
 });
